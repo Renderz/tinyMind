@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { generateGrid, generateTargetSequence, type SchulteMode } from "../schulteLogic";
+import { generateGrid, generateTargetSequence } from "../schulteLogic";
 
 describe("generateGrid", () => {
   it("generates a 3x3 grid with numbers 1-9 shuffled", () => {
