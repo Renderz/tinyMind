@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import type { MemoryCardData } from "./memoryLogic";
 
 interface MemoryCardProps {
@@ -14,7 +14,7 @@ export function MemoryCard({ card, isRevealed, lang, onClick, disabled }: Memory
 
   return (
     <div className="w-full" style={{ perspective: "800px" }}>
-      <motion.button
+      <m.button
         onClick={onClick}
         disabled={disabled}
         animate={{ rotateY: showFront ? 180 : 0 }}
@@ -41,7 +41,7 @@ export function MemoryCard({ card, isRevealed, lang, onClick, disabled }: Memory
             </span>
           )}
         </div>
-      </motion.button>
+      </m.button>
     </div>
   );
 }

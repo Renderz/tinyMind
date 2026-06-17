@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { SoundToggle } from "./SoundToggle";
 import { LanguageToggle } from "./LanguageToggle";
 
@@ -13,7 +13,7 @@ export function GameShell({ title, children, showBack = true }: GameShellProps) 
   const navigate = useNavigate();
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, x: 30 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -30 }}
@@ -24,6 +24,7 @@ export function GameShell({ title, children, showBack = true }: GameShellProps) 
         <div className="flex items-center gap-3">
           {showBack && (
             <button
+              type="button"
               onClick={() => navigate("/")}
               className="w-12 h-12 rounded-full bg-white shadow-md flex items-center justify-center text-2xl active:scale-90 transition-transform"
             >
@@ -40,6 +41,6 @@ export function GameShell({ title, children, showBack = true }: GameShellProps) 
       <div className="flex-1 w-full max-w-2xl flex flex-col items-center justify-center">
         {children}
       </div>
-    </motion.div>
+    </m.div>
   );
 }

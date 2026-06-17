@@ -6,6 +6,7 @@ export function LanguageToggle() {
 
   return (
     <button
+      type="button"
       onClick={() => i18n.changeLanguage(isZh ? "en" : "zh")}
       className="px-3 py-1.5 rounded-full bg-white shadow-md text-sm font-bold text-purple-600 active:scale-95 transition-transform"
     >

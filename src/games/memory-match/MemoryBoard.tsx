@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useReducer, useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { MemoryCard } from "./MemoryCard";
 import { generateCards, isMatch, type MemoryCardData } from "./memoryLogic";
@@ -11,72 +11,112 @@ interface MemoryBoardProps {
   onComplete: (scores: [number, number]) => void;
 }
 
+interface GameState {
+  cards: MemoryCardData[];
+  flippedIds: number[];
+  currentPlayer: 0 | 1;
+  scores: [number, number];
+  locked: boolean;
+}
+
+type GameAction =
+  | { type: "FLIP"; flippedIds: number[] }
+  | { type: "LOCK"; flippedIds: number[] }
+  | { type: "MATCH_SUCCESS" }
+  | { type: "MATCH_FAIL" };
+
+function init(pairs: number): GameState {
+  return {
+    cards: generateCards(pairs),
+    flippedIds: [],
+    currentPlayer: 0,
+    scores: [0, 0],
+    locked: false,
+  };
+}
+
+function reducer(state: GameState, action: GameAction): GameState {
+  switch (action.type) {
+    case "FLIP":
+      return { ...state, flippedIds: action.flippedIds };
+    case "LOCK":
+      return { ...state, flippedIds: action.flippedIds, locked: true };
+    case "MATCH_SUCCESS":
+      return {
+        ...state,
+        cards: state.cards.map((c) =>
+          state.flippedIds.includes(c.id) ? { ...c, isMatched: true } : c
+        ),
+        scores: state.currentPlayer === 0
+          ? [state.scores[0] + 1, state.scores[1]] as [number, number]
+          : [state.scores[0], state.scores[1] + 1] as [number, number],
+        flippedIds: [],
+        locked: false,
+      };
+    case "MATCH_FAIL":
+      return {
+        ...state,
+        flippedIds: [],
+        currentPlayer: state.currentPlayer === 0 ? 1 : 0,
+        locked: false,
+      };
+    default:
+      return state;
+  }
+}
+
 export function MemoryBoard({ pairs, player1, player2, onComplete }: MemoryBoardProps) {
   const { t, i18n } = useTranslation();
-  const [cards, setCards] = useState<MemoryCardData[]>(() => generateCards(pairs));
-  const [flippedIds, setFlippedIds] = useState<number[]>([]);
-  const [currentPlayer, setCurrentPlayer] = useState<0 | 1>(0);
-  const [scores, setScores] = useState<[number, number]>([0, 0]);
-  const [locked, setLocked] = useState(false);
+  const [state, dispatch] = useReducer(reducer, pairs, init);
 
-  const allMatched = cards.every((c) => c.isMatched);
+  const allMatched = state.cards.every((c) => c.isMatched);
 
   useEffect(() => {
-    if (allMatched && cards.length > 0) {
+    if (allMatched && state.cards.length > 0) {
       playSound("win");
-      const timer = setTimeout(() => onComplete(scores), 1500);
+      const timer = setTimeout(() => onComplete(state.scores), 1500);
       return () => clearTimeout(timer);
     }
-  }, [allMatched, cards.length, scores, onComplete]);
+  }, [allMatched, state.cards.length, state.scores, onComplete]);
 
   const handleClick = useCallback(
     (cardId: number) => {
+      const { cards, flippedIds, locked } = state;
       if (locked) return;
       const card = cards.find((c) => c.id === cardId);
       if (!card || card.isMatched || flippedIds.includes(cardId)) return;
 
       playSound("flip");
       const newFlipped = [...flippedIds, cardId];
-      setFlippedIds(newFlipped);
 
-      if (newFlipped.length === 2) {
-        setLocked(true);
-        const [idA, idB] = newFlipped;
-        const cardA = cards.find((c) => c.id === idA)!;
-        const cardB = cards.find((c) => c.id === idB)!;
+      if (newFlipped.length < 2) {
+        dispatch({ type: "FLIP", flippedIds: newFlipped });
+        return;
+      }
 
-        if (isMatch(cardA, cardB)) {
-          setTimeout(() => {
-            playSound("correct");
-            setCards((prev) =>
-              prev.map((c) =>
-                c.id === idA || c.id === idB ? { ...c, isMatched: true } : c
-              )
-            );
-            setScores((prev) => {
-              const next = [...prev] as [number, number];
-              next[currentPlayer]++;
-              return next;
-            });
-            setFlippedIds([]);
-            setLocked(false);
-          }, 600);
-        } else {
-          setTimeout(() => {
-            setFlippedIds([]);
-            setCurrentPlayer((p) => (p === 0 ? 1 : 0));
-            setLocked(false);
-          }, 1200);
-        }
+      dispatch({ type: "LOCK", flippedIds: newFlipped });
+      const [idA, idB] = newFlipped;
+      const cardA = cards.find((c) => c.id === idA)!;
+      const cardB = cards.find((c) => c.id === idB)!;
+
+      if (isMatch(cardA, cardB)) {
+        setTimeout(() => {
+          playSound("correct");
+          dispatch({ type: "MATCH_SUCCESS" });
+        }, 600);
+      } else {
+        setTimeout(() => {
+          dispatch({ type: "MATCH_FAIL" });
+        }, 1200);
       }
     },
-    [cards, flippedIds, locked, currentPlayer]
+    [state]
   );
 
+  const { currentPlayer, scores, locked, cards, flippedIds } = state;
   const playerName = currentPlayer === 0 ? player1 : player2;
   const playerColor = currentPlayer === 0 ? "text-pink-500" : "text-sky-500";
   const playerBg = currentPlayer === 0 ? "bg-pink-100" : "bg-sky-100";
-
   const cols = pairs <= 2 ? 2 : 4;
 
   return (

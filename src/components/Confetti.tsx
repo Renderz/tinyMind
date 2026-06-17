@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { useMemo } from "react";
 
 const COLORS = ["#FF6B6B", "#4ECDC4", "#FFE66D", "#95E1D3", "#C7CEEA", "#FFAAA5"];
@@ -21,7 +21,7 @@ export function Confetti() {
   return (
     <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden">
       {pieces.map((p) => (
-        <motion.div
+        <m.div
           key={p.id}
           className="absolute w-3 h-3 rounded-sm"
           style={{ backgroundColor: p.color, left: `${p.x}%`, top: "-20px" }}

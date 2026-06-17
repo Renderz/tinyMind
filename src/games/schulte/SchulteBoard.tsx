@@ -1,5 +1,5 @@
-import { useState, useCallback, useEffect } from "react";
-import { motion } from "framer-motion";
+import { useState, useCallback } from "react";
+import { m } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { SchulteCell } from "./SchulteCell";
 import { generateGrid, generateTargetSequence, type SchulteMode } from "./schulteLogic";
@@ -20,14 +20,6 @@ export function SchulteBoard({ mode, size, onComplete }: SchulteBoardProps) {
   const [wrongCell, setWrongCell] = useState<number | null>(null);
   const timer = useTimer();
 
-  useEffect(() => {
-    if (currentIndex >= targetSeq.length && timer.isRunning) {
-      timer.stop();
-      playSound("win");
-      onComplete(timer.elapsed);
-    }
-  }, [currentIndex]);
-
   const handleCellClick = useCallback(
     (cellValue: number) => {
       if (currentIndex === 0 && !timer.isRunning) {
@@ -36,14 +28,21 @@ export function SchulteBoard({ mode, size, onComplete }: SchulteBoardProps) {
 
       if (cellValue === targetSeq[currentIndex]) {
         playSound("correct");
-        setCurrentIndex((prev) => prev + 1);
+        const nextIndex = currentIndex + 1;
+        setCurrentIndex(nextIndex);
+
+        if (nextIndex >= targetSeq.length && timer.isRunning) {
+          timer.stop();
+          playSound("win");
+          onComplete(timer.elapsed);
+        }
       } else {
         playSound("wrong");
         setWrongCell(cellValue);
         setTimeout(() => setWrongCell(null), 400);
       }
     },
-    [currentIndex, targetSeq, timer]
+    [currentIndex, targetSeq, timer, onComplete]
   );
 
   const getCellState = (cellValue: number): "default" | "correct" | "wrong" => {
@@ -62,14 +61,14 @@ export function SchulteBoard({ mode, size, onComplete }: SchulteBoardProps) {
           {t("common.timeUsed", { seconds: timer.elapsed.toFixed(1) })}
         </span>
         {mode === "random" && nextTarget && (
-          <motion.span
+          <m.span
             key={nextTarget}
             initial={{ scale: 1.5, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             className="text-2xl font-bold text-pink-500 bg-pink-100 px-4 py-1 rounded-full"
           >
             {t("schulte.findNext", { target: nextTarget })}
-          </motion.span>
+          </m.span>
         )}
       </div>
 
@@ -80,9 +79,9 @@ export function SchulteBoard({ mode, size, onComplete }: SchulteBoardProps) {
           maxWidth: `${size * 90}px`,
         }}
       >
-        {grid.map((number, i) => (
+        {grid.map((number) => (
           <SchulteCell
-            key={i}
+            key={number}
             number={number}
             state={getCellState(number)}
             onClick={() => handleCellClick(number)}

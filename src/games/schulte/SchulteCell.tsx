@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 
 interface SchulteCellProps {
   number: number;
@@ -15,7 +15,7 @@ export function SchulteCell({ number, state, onClick }: SchulteCellProps) {
       : "bg-white text-purple-700";
 
   return (
-    <motion.button
+    <m.button
       onClick={onClick}
       animate={
         state === "wrong"
@@ -29,6 +29,6 @@ export function SchulteCell({ number, state, onClick }: SchulteCellProps) {
       style={{ fontSize: "clamp(1.5rem, 6vw, 2.5rem)" }}
     >
       {number}
-    </motion.button>
+    </m.button>
   );
 }
