@@ -1,0 +1,47 @@
+{
+  "app": {
+    "title": "tinyMind Games",
+    "subtitle": "Play with mom and dad!"
+  },
+  "common": {
+    "start": "Start",
+    "back": "Back",
+    "restart": "Play Again",
+    "home": "Home",
+    "completed": "Great job!",
+    "timeUsed": "Time: {{seconds}}s",
+    "soundOn": "Sound On",
+    "soundOff": "Sound Off"
+  },
+  "schulte": {
+    "title": "Schulte Grid",
+    "description": "Find numbers in order, train focus",
+    "mode": {
+      "forward": "Forward",
+      "backward": "Backward",
+      "random": "Random"
+    },
+    "difficulty": {
+      "3": "3×3 Easy",
+      "4": "4×4 Medium",
+      "5": "5×5 Hard"
+    },
+    "findNext": "Next: {{target}}",
+    "bestTime": "Best: {{seconds}}s"
+  },
+  "memory": {
+    "title": "Memory Match",
+    "description": "Flip cards to find pairs",
+    "player1": "Player 1",
+    "player2": "Player 2",
+    "difficulty": {
+      "2": "2 Pairs Easy",
+      "4": "4 Pairs Medium",
+      "6": "6 Pairs Hard"
+    },
+    "turn": "{{name}}'s turn",
+    "score": "{{name}}: {{score}}",
+    "winner": "{{name}} wins!",
+    "tie": "It's a tie! Great job!"
+  }
+}

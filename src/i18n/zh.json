@@ -1,0 +1,47 @@
+{
+  "app": {
+    "title": "tinyMind 小游戏",
+    "subtitle": "和爸爸妈妈一起玩！"
+  },
+  "common": {
+    "start": "开始",
+    "back": "返回",
+    "restart": "再玩一次",
+    "home": "首页",
+    "completed": "完成啦！",
+    "timeUsed": "用时 {{seconds}} 秒",
+    "soundOn": "音效开",
+    "soundOff": "音效关"
+  },
+  "schulte": {
+    "title": "舒尔特方格",
+    "description": "按顺序找数字，训练专注力",
+    "mode": {
+      "forward": "正序",
+      "backward": "倒序",
+      "random": "乱序"
+    },
+    "difficulty": {
+      "3": "3×3 简单",
+      "4": "4×4 中等",
+      "5": "5×5 挑战"
+    },
+    "findNext": "下一个找：{{target}}",
+    "bestTime": "最佳：{{seconds}} 秒"
+  },
+  "memory": {
+    "title": "记忆对对碰",
+    "description": "翻牌找配对，比比谁记得多",
+    "player1": "玩家 1",
+    "player2": "玩家 2",
+    "difficulty": {
+      "2": "2 对 简单",
+      "4": "4 对 中等",
+      "6": "6 对 挑战"
+    },
+    "turn": "轮到 {{name}}",
+    "score": "{{name}}：{{score}} 分",
+    "winner": "{{name}} 赢啦！",
+    "tie": "平局，都很棒！"
+  }
+}
