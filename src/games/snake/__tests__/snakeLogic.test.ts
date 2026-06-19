@@ -4,8 +4,6 @@ import {
   moveSnake,
   generateFood,
   checkFood,
-  type Direction,
-  type Point,
 } from "../snakeLogic";
 
 describe("createInitialSnake", () => {

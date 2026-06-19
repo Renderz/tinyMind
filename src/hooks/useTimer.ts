@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 
 export function useTimer() {
   const [elapsed, setElapsed] = useState(0);
@@ -6,20 +6,23 @@ export function useTimer() {
   const startTimeRef = useRef<number | null>(null);
   const rafRef = useRef<number | null>(null);
   const baseRef = useRef(0);
+  const tickRef = useRef<() => void>(() => {});
 
-  const tick = useCallback(() => {
-    if (startTimeRef.current !== null) {
-      const now = performance.now();
-      setElapsed((now - startTimeRef.current + baseRef.current) / 1000);
-      rafRef.current = requestAnimationFrame(tick);
-    }
+  useEffect(() => {
+    tickRef.current = () => {
+      if (startTimeRef.current !== null) {
+        const now = performance.now();
+        setElapsed((now - startTimeRef.current + baseRef.current) / 1000);
+        rafRef.current = requestAnimationFrame(tickRef.current);
+      }
+    };
   }, []);
 
   const start = useCallback(() => {
     startTimeRef.current = performance.now();
     setIsRunning(true);
-    rafRef.current = requestAnimationFrame(tick);
-  }, [tick]);
+    rafRef.current = requestAnimationFrame(tickRef.current);
+  }, []);
 
   const stop = useCallback(() => {
     if (rafRef.current !== null) {
@@ -32,6 +35,10 @@ export function useTimer() {
     }
     setIsRunning(false);
   }, []);
+
+  useEffect(() => {
+    return () => stop();
+  }, [stop]);
 
   const reset = useCallback(() => {
     if (rafRef.current !== null) {

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useReducer, useEffect, useCallback, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import {
   createInitialSnake,
@@ -25,11 +25,39 @@ const OPPOSITE: Record<Direction, Direction> = {
   right: "left",
 };
 
+interface GameState {
+  snake: Point[];
+  food: Point;
+  score: number;
+}
+
+type GameAction = { type: "TICK"; direction: Direction };
+
+function init(): GameState {
+  const snake = createInitialSnake(COLS, ROWS);
+  return { snake, food: generateFood(snake, COLS, ROWS), score: 0 };
+}
+
+function reducer(state: GameState, action: GameAction): GameState {
+  if (action.type !== "TICK") return state;
+
+  const ate = checkFood(state.snake, state.food);
+  const { snake: newSnake } = moveSnake(state.snake, action.direction, COLS, ROWS, ate);
+
+  if (ate) {
+    playSound("correct");
+    return {
+      snake: newSnake,
+      food: generateFood(newSnake, COLS, ROWS),
+      score: state.score + 1,
+    };
+  }
+  return { ...state, snake: newSnake };
+}
+
 export function SnakeBoard({ speed, onComplete }: SnakeBoardProps) {
   const { t } = useTranslation();
-  const [snake, setSnake] = useState<Point[]>(() => createInitialSnake(COLS, ROWS));
-  const [food, setFood] = useState<Point>(() => generateFood(snake, COLS, ROWS));
-  const [score, setScore] = useState(0);
+  const [state, dispatch] = useReducer(reducer, undefined, init);
   const directionRef = useRef<Direction>("right");
   const nextDirectionRef = useRef<Direction>("right");
 
@@ -60,18 +88,10 @@ export function SnakeBoard({ speed, onComplete }: SnakeBoardProps) {
   useEffect(() => {
     const interval = setInterval(() => {
       directionRef.current = nextDirectionRef.current;
-      const ate = checkFood(snake, food);
-      const { snake: newSnake } = moveSnake(snake, directionRef.current, COLS, ROWS, ate);
-
-      if (ate) {
-        playSound("correct");
-        setScore((s) => s + 1);
-        setFood(generateFood(newSnake, COLS, ROWS));
-      }
-      setSnake(newSnake);
+      dispatch({ type: "TICK", direction: directionRef.current });
     }, speed);
     return () => clearInterval(interval);
-  }, [snake, food, speed]);
+  }, [speed]);
 
   const handleTouchStart = useRef<Point | null>(null);
 
@@ -97,16 +117,9 @@ export function SnakeBoard({ speed, onComplete }: SnakeBoardProps) {
     [handleDirection]
   );
 
+  const { snake, food, score } = state;
   const isSnake = (x: number, y: number) => snake.some((s) => s.x === x && s.y === y);
-  const isFood = (x: number, y: number) => food.x === x && food.y === y;
   const isHead = (x: number, y: number) => snake[0].x === x && snake[0].y === y;
-
-  const dirButtons: { dir: Direction; label: string }[] = [
-    { dir: "up", label: "↑" },
-    { dir: "left", label: "←" },
-    { dir: "down", label: "↓" },
-    { dir: "right", label: "→" },
-  ];
 
   return (
     <div className="w-full flex flex-col items-center gap-4">
@@ -136,7 +149,7 @@ export function SnakeBoard({ speed, onComplete }: SnakeBoardProps) {
           const y = Math.floor(i / COLS);
           const head = isHead(x, y);
           const body = isSnake(x, y);
-          const meal = isFood(x, y);
+          const meal = food.x === x && food.y === y;
           return (
             <div
               key={i}

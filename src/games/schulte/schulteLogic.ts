@@ -35,7 +35,7 @@ export function generateGrid(mode: SchulteMode, size: number): number[] {
 }
 
 export function generateTargetSequence(mode: SchulteMode, grid: number[]): number[] {
-  const sorted = [...grid].sort((a, b) => a - b);
+  const sorted = grid.toSorted((a, b) => a - b);
   if (mode === "backward") {
     return sorted.reverse();
   }

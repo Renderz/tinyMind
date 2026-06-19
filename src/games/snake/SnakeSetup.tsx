@@ -10,6 +10,8 @@ const SPEEDS: Record<SnakeDifficulty, number> = {
   fast: 150,
 };
 
+const DIFFICULTIES: SnakeDifficulty[] = ["slow", "medium", "fast"];
+
 interface SnakeSetupProps {
   onStart: (difficulty: SnakeDifficulty) => void;
   initialDifficulty: SnakeDifficulty;
@@ -18,14 +20,13 @@ interface SnakeSetupProps {
 export function SnakeSetup({ onStart, initialDifficulty }: SnakeSetupProps) {
   const { t } = useTranslation();
   const [difficulty, setDifficulty] = useState<SnakeDifficulty>(initialDifficulty);
-  const difficulties: SnakeDifficulty[] = ["slow", "medium", "fast"];
 
   return (
     <div className="w-full flex flex-col items-center gap-8">
       <div className="w-full">
         <p className="text-lg font-bold text-purple-600 mb-3 text-center">🎮</p>
         <div className="flex gap-3 justify-center flex-wrap">
-          {difficulties.map((d) => (
+          {DIFFICULTIES.map((d) => (
             <button
               key={d}
               type="button"

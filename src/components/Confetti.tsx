@@ -1,22 +1,31 @@
 import { m } from "framer-motion";
-import { useMemo } from "react";
+import { useState } from "react";
 
 const COLORS = ["#FF6B6B", "#4ECDC4", "#FFE66D", "#95E1D3", "#C7CEEA", "#FFAAA5"];
 const COUNT = 30;
 
+interface Piece {
+  id: number;
+  x: number;
+  color: string;
+  delay: number;
+  rotate: number;
+  duration: number;
+}
+
+function createPieces(): Piece[] {
+  return Array.from({ length: COUNT }, (_, i) => ({
+    id: i,
+    x: Math.random() * 100,
+    color: COLORS[i % COLORS.length],
+    delay: Math.random() * 0.3,
+    rotate: Math.random() * 360,
+    duration: 1 + Math.random(),
+  }));
+}
+
 export function Confetti() {
-  const pieces = useMemo(
-    () =>
-      Array.from({ length: COUNT }, (_, i) => ({
-        id: i,
-        x: Math.random() * 100,
-        color: COLORS[i % COLORS.length],
-        delay: Math.random() * 0.3,
-        rotate: Math.random() * 360,
-        duration: 1 + Math.random(),
-      })),
-    []
-  );
+  const [pieces] = useState<Piece[]>(createPieces);
 
   return (
     <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden">
