@@ -3,18 +3,20 @@ import { m } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import type { SchulteMode } from "./schulteLogic";
 
-const MODES: SchulteMode[] = ["forward", "backward", "random"];
+const MODES: SchulteMode[] = ["forward", "backward", "random", "odd", "even"];
 const SIZES = [3, 4, 5];
 
 interface SchulteSetupProps {
   onStart: (mode: SchulteMode, size: number) => void;
   bestTimes: Record<string, number | null>;
+  initialMode: SchulteMode;
+  initialSize: number;
 }
 
-export function SchulteSetup({ onStart, bestTimes }: SchulteSetupProps) {
+export function SchulteSetup({ onStart, bestTimes, initialMode, initialSize }: SchulteSetupProps) {
   const { t } = useTranslation();
-  const [mode, setMode] = useState<SchulteMode>("forward");
-  const [size, setSize] = useState(3);
+  const [mode, setMode] = useState<SchulteMode>(initialMode);
+  const [size, setSize] = useState(initialSize);
 
   const bestKey = `schulte-${mode}-${size}`;
 
@@ -23,18 +25,18 @@ export function SchulteSetup({ onStart, bestTimes }: SchulteSetupProps) {
       <div className="w-full">
         <p className="text-lg font-bold text-purple-600 mb-3 text-center">{t("schulte.mode.forward")}</p>
         <div className="flex gap-3 justify-center flex-wrap">
-          {MODES.map((m) => (
+          {MODES.map((mo) => (
             <button
-              key={m}
+              key={mo}
               type="button"
-              onClick={() => setMode(m)}
+              onClick={() => setMode(mo)}
               className={`px-5 py-3 rounded-2xl font-bold text-lg transition-all active:scale-95 ${
-                mode === m
+                mode === mo
                   ? "bg-purple-500 text-white shadow-lg scale-105"
                   : "bg-white text-purple-500 shadow-md"
               }`}
             >
-              {t(`schulte.mode.${m}`)}
+              {t(`schulte.mode.${mo}`)}
             </button>
           ))}
         </div>

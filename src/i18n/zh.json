@@ -19,7 +19,9 @@
     "mode": {
       "forward": "正序",
       "backward": "倒序",
-      "random": "乱序"
+      "random": "乱序",
+      "odd": "奇数",
+      "even": "偶数"
     },
     "difficulty": {
       "3": "3×3 简单",

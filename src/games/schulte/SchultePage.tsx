@@ -77,7 +77,12 @@ export function SchultePage() {
       <AnimatePresence mode="wait">
         {state.phase === "setup" && (
           <m.div key="setup" exit={{ opacity: 0 }} className="w-full">
-            <SchulteSetup onStart={handleStart} bestTimes={state.bestTimes} />
+            <SchulteSetup
+              onStart={handleStart}
+              bestTimes={state.bestTimes}
+              initialMode={state.mode}
+              initialSize={state.size}
+            />
           </m.div>
         )}
 

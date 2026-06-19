@@ -1,4 +1,4 @@
-export type SchulteMode = "forward" | "backward" | "random";
+export type SchulteMode = "forward" | "backward" | "random" | "odd" | "even";
 
 function shuffle<T>(array: T[]): T[] {
   const result = [...array];
@@ -9,21 +9,35 @@ function shuffle<T>(array: T[]): T[] {
   return result;
 }
 
-export function generateGrid(size: number): number[] {
+function generateNumberSet(mode: SchulteMode, size: number): number[] {
   const total = size * size;
-  return shuffle(Array.from({ length: total }, (_, i) => i + 1));
-}
-
-export function generateTargetSequence(mode: SchulteMode, size: number): number[] {
-  const total = size * size;
-  const numbers = Array.from({ length: total }, (_, i) => i + 1);
 
   switch (mode) {
     case "forward":
-      return numbers;
     case "backward":
-      return numbers.reverse();
-    case "random":
-      return shuffle(numbers);
+      return Array.from({ length: total }, (_, i) => i + 1);
+    case "odd":
+      return Array.from({ length: total }, (_, i) => i * 2 + 1);
+    case "even":
+      return Array.from({ length: total }, (_, i) => (i + 1) * 2);
+    case "random": {
+      const numbers = new Set<number>();
+      while (numbers.size < total) {
+        numbers.add(Math.floor(Math.random() * (total * 4)) + 1);
+      }
+      return [...numbers];
+    }
   }
+}
+
+export function generateGrid(mode: SchulteMode, size: number): number[] {
+  return shuffle(generateNumberSet(mode, size));
+}
+
+export function generateTargetSequence(mode: SchulteMode, grid: number[]): number[] {
+  const sorted = [...grid].sort((a, b) => a - b);
+  if (mode === "backward") {
+    return sorted.reverse();
+  }
+  return sorted;
 }

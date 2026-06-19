@@ -1,5 +1,4 @@
 import { useState, useCallback } from "react";
-import { m } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { SchulteCell } from "./SchulteCell";
 import { generateGrid, generateTargetSequence, type SchulteMode } from "./schulteLogic";
@@ -14,8 +13,8 @@ interface SchulteBoardProps {
 
 export function SchulteBoard({ mode, size, onComplete }: SchulteBoardProps) {
   const { t } = useTranslation();
-  const [grid] = useState(() => generateGrid(size));
-  const [targetSeq] = useState(() => generateTargetSequence(mode, size));
+  const [grid] = useState(() => generateGrid(mode, size));
+  const [targetSeq] = useState(() => generateTargetSequence(mode, grid));
   const [currentIndex, setCurrentIndex] = useState(0);
   const [wrongCell, setWrongCell] = useState<number | null>(null);
   const timer = useTimer();
@@ -52,25 +51,11 @@ export function SchulteBoard({ mode, size, onComplete }: SchulteBoardProps) {
     return "default";
   };
 
-  const nextTarget = targetSeq[currentIndex];
-
   return (
     <div className="w-full flex flex-col items-center gap-4">
-      <div className="flex items-center gap-4">
-        <span className="text-2xl font-bold text-purple-600">
-          {t("common.timeUsed", { seconds: timer.elapsed.toFixed(1) })}
-        </span>
-        {mode === "random" && nextTarget && (
-          <m.span
-            key={nextTarget}
-            initial={{ scale: 1.5, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            className="text-2xl font-bold text-pink-500 bg-pink-100 px-4 py-1 rounded-full"
-          >
-            {t("schulte.findNext", { target: nextTarget })}
-          </m.span>
-        )}
-      </div>
+      <span className="text-2xl font-bold text-purple-600">
+        {t("common.timeUsed", { seconds: timer.elapsed.toFixed(1) })}
+      </span>
 
       <div
         className="grid gap-2 w-full"

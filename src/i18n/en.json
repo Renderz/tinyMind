@@ -19,7 +19,9 @@
     "mode": {
       "forward": "Forward",
       "backward": "Backward",
-      "random": "Random"
+      "random": "Random",
+      "odd": "Odd",
+      "even": "Even"
     },
     "difficulty": {
       "3": "3×3 Easy",
