@@ -11,6 +11,7 @@ export function HomePage() {
   const games = [
     { id: "schulte", path: "/schulte", emoji: "🔢", title: t("schulte.title"), desc: t("schulte.description"), color: "from-purple-400 to-indigo-500" },
     { id: "memory", path: "/memory", emoji: "🃏", title: t("memory.title"), desc: t("memory.description"), color: "from-pink-400 to-rose-500" },
+    { id: "snake", path: "/snake", emoji: "🐍", title: t("snake.title"), desc: t("snake.description"), color: "from-green-400 to-emerald-500" },
   ];
 
   return (

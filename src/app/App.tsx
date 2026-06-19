@@ -3,6 +3,7 @@ import { LazyMotion, AnimatePresence, domAnimation } from "framer-motion";
 import { HomePage } from "../pages/HomePage";
 import { SchultePage } from "../games/schulte/SchultePage";
 import { MemoryPage } from "../games/memory-match/MemoryPage";
+import { SnakePage } from "../games/snake/SnakePage";
 
 export function App() {
   return (
@@ -13,6 +14,7 @@ export function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/schulte" element={<SchultePage />} />
             <Route path="/memory" element={<MemoryPage />} />
+            <Route path="/snake" element={<SnakePage />} />
           </Routes>
         </AnimatePresence>
       </BrowserRouter>

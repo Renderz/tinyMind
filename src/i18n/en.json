@@ -45,5 +45,15 @@
     "score": "{{name}}: {{score}}",
     "winner": "{{name}} wins!",
     "tie": "It's a tie! Great job!"
+  },
+  "snake": {
+    "title": "Snake",
+    "description": "Guide the snake to eat fruits",
+    "score": "Score: {{score}}",
+    "difficulty": {
+      "slow": "Slow Easy",
+      "medium": "Medium",
+      "fast": "Fast Hard"
+    }
   }
 }

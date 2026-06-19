@@ -45,5 +45,15 @@
     "score": "{{name}}：{{score}} 分",
     "winner": "{{name}} 赢啦！",
     "tie": "平局，都很棒！"
+  },
+  "snake": {
+    "title": "贪吃蛇",
+    "description": "操控小蛇吃果子，越长越棒",
+    "score": "得分：{{score}}",
+    "difficulty": {
+      "slow": "慢速 简单",
+      "medium": "中速 中等",
+      "fast": "快速 挑战"
+    }
   }
 }
